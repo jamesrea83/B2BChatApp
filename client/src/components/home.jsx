@@ -22,9 +22,8 @@ class Home extends Component {
 
     render() {
         return (
-            <div className='home-container' style={this.state}>
+            <div className='home-container'>
                 {this.state.apiResponse}
-
             </div>
         )
     }
