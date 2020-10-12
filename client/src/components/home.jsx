@@ -6,7 +6,7 @@ class Home extends Component {
         super(props);
 
         this.state = {
-            apiResponse: ''
+            apiResponse: 'API not responding, please check it is running.'
         }
 
     }
@@ -23,7 +23,16 @@ class Home extends Component {
     render() {
         return (
             <div className='home-container'>
-                {this.state.apiResponse}
+                <h2>Browser to browser chat app demo</h2>
+
+                <div className='api-status-container'>
+                    {this.state.apiResponse}
+                </div>
+
+                <div className='user-link-container'>
+                    <a href='/user1' target='blank'>Click for user 1</a>
+                    <a href='/user2' target='blank'>Click for user 2</a>
+                </div>
             </div>
         )
     }
