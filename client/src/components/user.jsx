@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import '../css/user.css';
+import socketIOClient from 'socket.io-client';
+const ENDPOINT = "http://localhost:9000";
 
 class User extends Component {
 
@@ -9,9 +11,31 @@ class User extends Component {
         this.state = {
             connectionStatus: 'Not connected',
             username: this.props.username,
+            chatLog: [],
             messageToSend: ''
         }
 
+        this.socket = socketIOClient(ENDPOINT);
+
+        this.socket.on('connectionStatus', status => {
+            let connectionStatus = status ? 'Connected' : 'Not Connected';
+            this.setState({ connectionStatus });
+        })
+
+        this.socket.on('serverMessage', message => {
+            console.log('serverMessage received by client');
+            this.addToChatLog(message);
+        })
+
+    }
+
+    addToChatLog(message) {
+        let newLog = this.state.chatLog.map(entry => entry);
+        newLog.push(message);
+
+        this.setState({
+            chatLog: newLog
+        });
     }
 
     onInputChange(input) {
@@ -21,14 +45,22 @@ class User extends Component {
     }
 
     onSendButtonClick() {
-        console.log(this.state.messageToSend);
 
+        let message = {
+            text: this.state.messageToSend,
+            user:this.state.username
+        };
+
+        this.socket.emit('clientMessage', message);
+
+        //this.addToChatLog(this.state.messageToSend);
         /**
          * 1) Send message to API
          * 2) Add message to sender's chat log
          * 3) setState messageToSend blank
          */
 
+         this.setState({ messageToSend: '' });
     }
 
     render() {
@@ -44,11 +76,17 @@ class User extends Component {
                 </div>
 
                 <h3>Chat Log</h3>
-                <div className='chat-log-container'></div>
+                <div className='chat-log-container'>
+                    {this.state.chatLog.map((entry, index) => {
+                        return (
+                        <div className='chat-log-entry' key={index}>{entry.time} - {entry.user}: {entry.text}</div>
+                        )
+                    })}
+                </div>
 
                 <h3>Input box</h3>
                 <div className='input-box-container'>
-                    <input className='input-box' onChange={this.onInputChange.bind(this)}></input>
+                    <input className='input-box' value={this.state.messageToSend} onChange={this.onInputChange.bind(this)}></input>
                 </div>
 
                 <div className='send-button-container'>
