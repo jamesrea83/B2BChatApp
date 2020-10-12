@@ -12,14 +12,11 @@
 body {
     position: relative;
     background-color: #0D1723;
-    overflow: hidden;
-    width: 100vw;
-    height: 100vh;
 }
 
 .user-container {
     height: 800px;
-    width: 50%;
+    max-width: 900px;
     margin: 50px auto;
 }
 
@@ -56,7 +53,7 @@ h1, h2, h3, h4, h5, a, p {
     min-height: 10em;
     width: 80%;
     margin: auto;
-    overflow: hidden;
+    overflow-y: scroll;
     height: 40%;
 }
 

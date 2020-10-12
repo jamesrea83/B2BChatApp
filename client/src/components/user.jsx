@@ -21,6 +21,10 @@ class User extends Component {
 
     }
 
+    componentDidUpdate () {
+        this.scrollToBottom()
+    }
+
     componentDidMount() {
         this.socket.on('connectionStatus', status => {
             let connectionStatus = status ? 'Connected' : 'Not Connected';
@@ -31,6 +35,8 @@ class User extends Component {
             console.log('serverMessage received by client');
             this.addToChatLog(message);
         })
+
+        this.chatEndRef = React.createRef();
     }
 
     addToChatLog(message) {
@@ -70,6 +76,10 @@ class User extends Component {
         this.sendMessage();
     }
 
+    scrollToBottom() {
+        this.chatEndRef.current.scrollIntoView({ behavior: "smooth" })
+    }
+
     render() {
         return (
             <div className='user-container'>
@@ -91,6 +101,7 @@ class User extends Component {
                         </div>
                         )
                     })}
+                    <div ref={this.chatEndRef}></div>
                 </div>
 
                 <h5>Input box</h5>
