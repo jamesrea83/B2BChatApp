@@ -1,37 +1,38 @@
 import React, { Component } from 'react';
-
+import socketIOClient from 'socket.io-client';
+const ENDPOINT = "http://localhost:9000";
 class Home extends Component {
 
     constructor(props) {
         super(props);
 
         this.state = {
-            apiResponse: 'API not responding, please check it is running.'
+            connectionStatus: 'Not Connected'
         }
 
+        this.socket = socketIOClient(ENDPOINT);
+
+        this.socket.on('connectionStatus', status => {
+            let connectionStatus = status ? 'Connected' : 'Not Connected';
+            this.setState({ connectionStatus });
+        })
     }
-
-
-    componentDidMount() {
-        fetch("http://localhost:9000/testAPI")
-            .then(res => res.text())
-            .then(res => this.setState({ apiResponse: res }));
-    }
-
-
 
     render() {
         return (
             <div className='home-container'>
-                <h2>Browser to browser chat app demo</h2>
+                <h1>Browser to browser chat app demo</h1>
 
                 <div className='api-status-container'>
-                    {this.state.apiResponse}
+                    <h3>{this.state.connectionStatus}</h3>
                 </div>
-
+                <p>
+                    Click the links below to open client chats in a new tab.
+                </p>
                 <div className='user-link-container'>
-                    <a href='/user1' target='blank'>Click for user 1</a>
-                    <a href='/user2' target='blank'>Click for user 2</a>
+                    <a href='/user1' target='_blank'>Click for user 1</a>
+                    <br />
+                    <a href='/user2' target='_blank'>Click for user 2</a>
                 </div>
             </div>
         )

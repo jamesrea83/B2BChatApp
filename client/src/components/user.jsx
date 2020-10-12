@@ -17,6 +17,11 @@ class User extends Component {
 
         this.socket = socketIOClient(ENDPOINT);
 
+
+
+    }
+
+    componentDidMount() {
         this.socket.on('connectionStatus', status => {
             let connectionStatus = status ? 'Connected' : 'Not Connected';
             this.setState({ connectionStatus });
@@ -26,7 +31,6 @@ class User extends Component {
             console.log('serverMessage received by client');
             this.addToChatLog(message);
         })
-
     }
 
     addToChatLog(message) {
@@ -44,7 +48,9 @@ class User extends Component {
         });
     }
 
-    onSendButtonClick() {
+    sendMessage() {
+
+        if (this.state.messageToSend.length === 0) return;
 
         let message = {
             text: this.state.messageToSend,
@@ -52,15 +58,16 @@ class User extends Component {
         };
 
         this.socket.emit('clientMessage', message);
+        this.setState({ messageToSend: '' });
+    }
 
-        //this.addToChatLog(this.state.messageToSend);
-        /**
-         * 1) Send message to API
-         * 2) Add message to sender's chat log
-         * 3) setState messageToSend blank
-         */
+    onSendButtonClick() {
+        this.sendMessage();
+    }
 
-         this.setState({ messageToSend: '' });
+    onKeyDown(event) {
+        if (event.keyCode !== 13) return;
+        this.sendMessage();
     }
 
     render() {
@@ -68,25 +75,32 @@ class User extends Component {
             <div className='user-container'>
 
                 <div className='username-container'>
-                    <h1>{this.state.username}</h1>
+                    <h3>{this.state.username}</h3>
                 </div>
 
                 <div className='status-container'>
-                    <h3>{this.state.connectionStatus}</h3>
+                    <h5>{this.state.connectionStatus}</h5>
                 </div>
 
-                <h3>Chat Log</h3>
+                <h5>Chat Log</h5>
                 <div className='chat-log-container'>
                     {this.state.chatLog.map((entry, index) => {
                         return (
-                        <div className='chat-log-entry' key={index}>{entry.time} - {entry.user}: {entry.text}</div>
+                        <div className='chat-log-entry' key={index}>
+                                {entry.user === this.state.username ? <i>{entry.time} - {entry.user}: {entry.text}</i> : `${entry.time} - ${entry.user}: ${entry.text}`}
+                        </div>
                         )
                     })}
                 </div>
 
-                <h3>Input box</h3>
+                <h5>Input box</h5>
                 <div className='input-box-container'>
-                    <input className='input-box' value={this.state.messageToSend} onChange={this.onInputChange.bind(this)}></input>
+                    <input className='input-box'
+                           value={this.state.messageToSend}
+                           onChange={this.onInputChange.bind(this)}
+                           onKeyDown={this.onKeyDown.bind(this)}
+                           >
+                    </input>
                 </div>
 
                 <div className='send-button-container'>
