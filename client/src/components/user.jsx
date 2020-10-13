@@ -97,7 +97,10 @@ class User extends Component {
                     {this.state.chatLog.map((entry, index) => {
                         return (
                         <div className='chat-log-entry' key={index}>
-                                {entry.user === this.state.username ? <i>{entry.time} - {entry.user}: {entry.text}</i> : `${entry.time} - ${entry.user}: ${entry.text}`}
+                                <div className={`chat-log-entry-${entry.user === this.state.username ? 'right' : 'left'}`}>
+                                    <div className='chat-log-header'>{entry.time} - {entry.user}</div>
+                                    <div className='chat-log-body'>{entry.text}</div>
+                                </div>
                         </div>
                         )
                     })}

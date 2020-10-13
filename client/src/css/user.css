@@ -57,6 +57,29 @@ h1, h2, h3, h4, h5, a, p {
     height: 40%;
 }
 
+.chat-log-entry {
+    margin: 0 5px;
+    min-height: 80px;
+    position: relative;
+}
+
+
+.chat-log-entry-left > .chat-log-header,
+.chat-log-entry-left > .chat-log-body {
+    position: absolute;
+    left: 2px;
+}
+
+.chat-log-entry-right > .chat-log-header,
+.chat-log-entry-right > .chat-log-body {
+    position: absolute;
+    right: 2px;
+}
+
+.chat-log-body {
+    bottom: 0px;
+}
+
 .input-box-container,
 .send-button-container {
     min-height: 1em;
@@ -75,4 +98,5 @@ button {
     width: 100%;
     background-color: #0D1723;
     border: solid 1px;
+    padding: 0 2px;
 }
